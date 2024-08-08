@@ -89,7 +89,7 @@ const TaskDetail: React.FC<TaskDetailProps> = ({ task }) => {
     return <div>Loading...</div>;
   }
 
-  const currentTask = tasks.find((t: Task) => t.id === task.id);
+  const currentTask = tasks.find(t => t.id === task.id);
 
   if (!currentTask) {
     // Redirect to homepage if the task doesn't exist
@@ -122,10 +122,10 @@ const TaskDetail: React.FC<TaskDetailProps> = ({ task }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const tasks: Task[] = await fetchTasks();
+  const tasks = await fetchTasks();
   const limitedTasks = tasks.slice(0, 10);
 
-  const paths = limitedTasks.map((task: Task) => ({
+  const paths = limitedTasks.map((task: any) => ({
     params: { id: task.id.toString() },
   }));
 
@@ -134,7 +134,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { id } = context.params!;
-  const task: Task = await fetchTaskById(Number(id));
+  const task = await fetchTaskById(Number(id));
 
   return {
     props: {
