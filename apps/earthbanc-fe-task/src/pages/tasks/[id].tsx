@@ -1,4 +1,3 @@
-// TaskDetail.tsx
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
