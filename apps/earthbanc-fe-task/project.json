@@ -1,0 +1,36 @@
+{
+  "name": "earthbanc-fe-task",
+  "root": "apps/earthbanc-fe-task",
+  "sourceRoot": "apps/earthbanc-fe-task/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/next:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/earthbanc-fe-task"
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/next:server",
+      "options": {
+        "buildTarget": "earthbanc-fe-task:build",
+        "dev": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/earthbanc-fe-task/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/earthbanc-fe-task"],
+      "options": {
+        "jestConfig": "apps/earthbanc-fe-task/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "earthbanc-fe-task-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/earthbanc-fe-task-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["earthbanc-fe-task"],
+  "// targets": "to see all targets run: nx show project earthbanc-fe-task-e2e --web",
+  "targets": {}
+}
