@@ -6,3 +6,8 @@ export const fetchTasks = async () => {
   const response = await axios.get(API_URL);
   return response.data;
 };
+
+export const fetchTaskById = async (id: number) => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data;
+};

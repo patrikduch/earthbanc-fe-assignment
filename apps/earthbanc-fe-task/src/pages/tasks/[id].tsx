@@ -1,8 +1,9 @@
+// TaskDetail.tsx
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import styled from 'styled-components';
 import { useTasks } from '../../contexts/TaskContext';
+import { fetchTasks, fetchTaskById } from '../../services/todoService';
 
 interface Task {
   userId: number;
@@ -88,7 +89,7 @@ const TaskDetail: React.FC<TaskDetailProps> = ({ task }) => {
     return <div>Loading...</div>;
   }
 
-  const currentTask = tasks.find(t => t.id === task.id);
+  const currentTask = tasks.find((t: Task) => t.id === task.id);
 
   if (!currentTask) {
     // Redirect to homepage if the task doesn't exist
@@ -121,10 +122,10 @@ const TaskDetail: React.FC<TaskDetailProps> = ({ task }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
-  const tasks: Task[] = response.data.slice(0, 10);
+  const tasks: Task[] = await fetchTasks();
+  const limitedTasks = tasks.slice(0, 10);
 
-  const paths = tasks.map(task => ({
+  const paths = limitedTasks.map((task: Task) => ({
     params: { id: task.id.toString() },
   }));
 
@@ -133,8 +134,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { id } = context.params!;
-  const response = await axios.get(`https://jsonplaceholder.typicode.com/todos/${id}`);
-  const task: Task = response.data;
+  const task: Task = await fetchTaskById(Number(id));
 
   return {
     props: {
