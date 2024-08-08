@@ -24,7 +24,7 @@ const ModalContent = styled.div`
 
 const ModalHeader = styled.h2`
   margin-top: 0;
-  margin-bottom: 20px;  /* Added margin bottom */
+  margin-bottom: 20px;
 `;
 
 const ModalBody = styled.div`
@@ -36,12 +36,12 @@ const ModalFooter = styled.div`
   justify-content: flex-end;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ hasError: boolean }>`
   width: calc(100% - 20px);
   margin-bottom: 10px;
   padding: 10px;
   font-size: 1em;
-  border: 1px solid #ccc;
+  border: 1px solid ${props => (props.hasError ? 'red' : '#ccc')};
   border-radius: 4px;
 `;
 
@@ -69,6 +69,13 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.9em;
+  margin-top: -10px;
+  margin-bottom: 10px;
+`;
+
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -78,12 +85,25 @@ interface TaskModalProps {
 const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
 
   const handleSave = () => {
-    if (name.trim() === '') return;
+    if (name.trim() === '') {
+      setError('Task Name is required');
+      return;
+    }
     onSave(name, description);
     setName('');
     setDescription('');
+    setError('');
+    onClose();
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    if (error) {
+      setError('');
+    }
   };
 
   if (!isOpen) return null;
@@ -96,10 +116,11 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave }) => {
           <Input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
             placeholder="Task Name (Required)"
-            required
+            hasError={!!error}
           />
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <TextArea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
