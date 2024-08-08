@@ -1,5 +1,6 @@
+// TaskProvider.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchTasks } from '../services/todoService';
 
 interface Task {
   userId: number;
@@ -40,17 +41,17 @@ export const TaskProvider: React.FC<IProps> = ({ children }) => {
       if (storedTasks) {
         fetchedTasks = JSON.parse(storedTasks);
       } else {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
-        fetchedTasks = response.data.slice(0, 10);
+        const apiTasks = await fetchTasks();
+        fetchedTasks = apiTasks.slice(0, 10);
         localStorage.setItem('tasks', JSON.stringify(fetchedTasks));
       }
 
       // Fetch new tasks from API and merge with stored tasks
-      const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
-      const apiTasks: Task[] = response.data.slice(0, 10);
+      const apiTasks = await fetchTasks();
+      const newApiTasks: Task[] = apiTasks.slice(0, 10);
 
       const mergedTasks = [
-        ...apiTasks.filter(apiTask => !fetchedTasks.some(task => task.id === apiTask.id)),
+        ...newApiTasks.filter(apiTask => !fetchedTasks.some(task => task.id === apiTask.id)),
         ...fetchedTasks,
       ].sort((a, b) => b.id - a.id); // Sort by id in descending order
 
