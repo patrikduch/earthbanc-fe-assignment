@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { useTasks } from '../../contexts/TaskContext';
@@ -121,18 +121,18 @@ const TaskDetail: React.FC<TaskDetailProps> = ({ task }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const tasks = await fetchTasks();
+  const tasks: Task[] = await fetchTasks();
   const limitedTasks = tasks.slice(0, 10);
 
-  const paths = limitedTasks.map((task: any) => ({
+  const paths = limitedTasks.map((task: Task) => ({
     params: { id: task.id.toString() },
   }));
 
   return { paths, fallback: true };
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const { id } = context.params!;
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext) => {
+  const { id } = context.params as { id: string };
   const task = await fetchTaskById(Number(id));
 
   return {
